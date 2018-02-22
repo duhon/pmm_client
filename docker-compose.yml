@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  db:
+    image: mysql:latest
+    hostname: db
+    environment:
+         MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    depends_on:
+     - pmm_server
+
+  pmm_server:
+    image: percona/pmm-server
+    hostname: pmm_server
+    ports:
+      - 80:80
+
+  pmm_client:
+    build: ./
+    hostname: pmm_client
+    depends_on:
+     - db
