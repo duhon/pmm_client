@@ -1,18 +1,29 @@
 version: '2'
 
 services:
-  db:
-    image: mysql:latest
-    hostname: db
-    environment:
-         - MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    db:
+        image: mysql
+        hostname: db
+        volumes:
+            - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
-  pmm_server:
-    build: ./
-    hostname: pmm_server
-    depends_on:
-        - db
-    ports:
-        - "80:80"
-    environment:
-         - MYSQL_HOST: db
+    pmm_server:
+        build: ./
+        hostname: pmm_server
+        depends_on:
+            - db
+        ports:
+            - "80:80"
+        environment:
+             MYSQL_HOST: db
+
+    wordpress:
+        depends_on:
+            - db
+        image: wordpress:latest
+        ports:
+            - "8082:80"
+        environment:
+            WORDPRESS_DB_HOST: db:3306
