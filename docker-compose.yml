@@ -2,28 +2,44 @@ version: '2'
 
 services:
     db:
-        image: mysql
+        image: mariadb
         hostname: db
         volumes:
             - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
-
     pmm_server:
-        build: ./
+        image: duhon/pmm
         hostname: pmm_server
         depends_on:
             - db
         ports:
-            - "80:80"
+            - "81:80"
         environment:
              MYSQL_HOST: db
-
     wordpress:
+        build:
+            context: .
+            dockerfile: build_wordpress
+        hostname: wordpress
         depends_on:
             - db
-        image: wordpress:latest
         ports:
-            - "8082:80"
+            - "80:80"
+        volumes:
+            - ./header.php:/usr/local/lib/php/header.php
+            - ./custom_php.ini:/usr/local/etc/php/conf.d/custom_php.ini
         environment:
             WORDPRESS_DB_HOST: db:3306
+    sysbench:
+        image: percona/sysbench
+        hostname: sysbench
+        tty: true
+    xhgui:
+        image: duhon/xhgui
+        hostname: xhgui
+        ports:
+            - "82:80"
+    mongodb:
+        image: mongo
+        hostname: mongodb

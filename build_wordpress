@@ -1,0 +1,7 @@
+FROM wordpress
+
+RUN apt-get update && apt-get install -y \
+	git
+
+RUN git clone https://github.com/tideways/php-profiler-extension.git /usr/src/php/ext/tideways
+RUN docker-php-ext-install tideways
