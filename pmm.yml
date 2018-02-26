@@ -1,4 +1,4 @@
-server_address: pmm_server
-client_address: pmm_server
-bind_address: pmm_server
+server_address: localhost
+client_address: localhost
+bind_address: localhost
 client_name: local

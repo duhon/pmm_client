@@ -9,7 +9,7 @@ services:
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
     pmm_server:
-        image: duhon/pmm
+        build: .
         hostname: pmm_server
         depends_on:
             - db
